@@ -31,7 +31,7 @@ app.use(cors(corsOptions)); // Enable CORS
 app.use(express.json());
 
 // Serve the static index.html file
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
 
 // Handle the essay generation POST request
 app.post("/generate", async (req, res) => {
