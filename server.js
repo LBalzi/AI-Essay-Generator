@@ -1,34 +1,22 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
-const path = require("path");
-
 
 const app = express();
 
-app.use(cors());
+// CORS setup to allow requests from the frontend (replace with your actual frontend URL)
+const corsOptions = {
+  origin: "https://ai-essay-generator-pchq.onrender.com", // Replace with your frontend URL
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions)); // Apply CORS to all routes
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));  // Serve static files from the current directory
-
-// Default route to serve index.html
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
 
 app.post("/generate", async (req, res) => {
-    const { topic, wordCount, includeCitations, citationStyle } = req.body;
-
-    if (!topic || !wordCount || wordCount < 50 || wordCount > 3000) {
-        return res.status(400).json({ error: "Invalid input data." });
-    }
-
-    // Construct the prompt
-    let prompt = `Write an academic essay on the following topic: ${topic}. The essay should be approximately ${wordCount} words.`;
-    
-    if (includeCitations) {
-        prompt += ` Use ${citationStyle} citation style.`;
-    }
+    const { prompt } = req.body;
 
     try {
         const response = await axios.post(
@@ -45,7 +33,7 @@ app.post("/generate", async (req, res) => {
                         content: prompt 
                     }
                 ],
-                max_tokens: Math.min(4000, wordCount * 2) // Dynamically adjust based on word count
+                max_tokens: 4000 // Adjust if needed
             },
             {
                 headers: {
@@ -58,7 +46,7 @@ app.post("/generate", async (req, res) => {
         res.json({ response: response.data.choices[0].message.content });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.response ? error.response.data : "Something went wrong" });
+        res.status(500).json({ error: "Something went wrong" });
     }
 });
 
