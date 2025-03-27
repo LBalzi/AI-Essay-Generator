@@ -1,31 +1,36 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const axios = require("axios");
 const path = require("path");
+const axios = require("axios");
 
 const app = express();
 
-// CORS setup to allow requests from the frontend (replace with your actual frontend URL)
+// CORS configuration to allow requests from the frontend's URL
 const corsOptions = {
-  origin: "https://your-frontend-url.onrender.com", // Replace with your frontend URL
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "https://ai-essay-generator-pchq.onrender.com", // Replace with your frontend's deployed URL
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-app.use(cors(corsOptions)); // Apply CORS to all routes
+app.use(cors(corsOptions)); // Enable CORS
 app.use(express.json());
 
-// Serve the index.html at the root URL
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
+// Serve the static index.html file
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Handle the generate POST request
+// Handle the essay generation POST request
 app.post("/generate", async (req, res) => {
-    const { prompt } = req.body;
+    const { topic, wordCount, includeCitations, citationStyle } = req.body;
+
+    // Build the prompt dynamically based on the input values
+    let prompt = `Write an academic essay on the topic of "${topic}" that is ${wordCount} words long.`;
+    if (includeCitations) {
+        prompt += ` Please include citations in the ${citationStyle} format.`;
+    }
 
     try {
+        // Send the request to OpenAI API
         const response = await axios.post(
             "https://api.openai.com/v1/chat/completions",
             {
@@ -57,4 +62,5 @@ app.post("/generate", async (req, res) => {
     }
 });
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+// Ensure the app listens to requests on Render's port
+app.listen(process.env.PORT || 5000, () => console.log("Server running on port 5000"));

@@ -4,121 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Essay Generator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: #f4f7fc;
-            color: #333;
-            text-align: center;
-            padding: 40px 10px;
-        }
-
-        h2 {
-            color: #4a90e2;
-            font-size: 2.5em;
-            margin-bottom: 30px;
-        }
-
-        .container {
-            background: #fff;
-            border-radius: 10px;
-            padding: 40px;
-            max-width: 600px;
-            margin: 0 auto;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            border-color: #4a90e2;
-            outline: none;
-        }
-
-        textarea {
-            height: 150px;
-            resize: none;
-        }
-
-        button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            background-color: #4a90e2;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #357ab7;
-        }
-
-        .checkbox-container {
-            margin: 20px 0;
-            font-size: 1rem;
-        }
-
-        select {
-            font-size: 1rem;
-        }
-
-        #output {
-            margin-top: 30px;
-            font-size: 1.1rem;
-            color: #333;
-            white-space: pre-line;
-            text-align: left;
-            max-width: 90%;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #e9f4ff;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-
-            button {
-                padding: 10px 20px;
-                font-size: 1rem;
-            }
-        }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f7f6; }
+        h2 { color: #4A90E2; }
+        input, textarea, select { width: 80%; margin-bottom: 10px; padding: 10px; border-radius: 5px; border: 1px solid #ddd; }
+        button { padding: 10px 20px; cursor: pointer; border-radius: 5px; background-color: #4A90E2; color: white; border: none; }
+        button:hover { background-color: #357ABD; }
+        #output { margin-top: 20px; font-size: 18px; white-space: pre-line; text-align: left; max-width: 80%; margin: auto; background-color: #fff; padding: 15px; border-radius: 5px; border: 1px solid #ddd; }
+        .container { max-width: 800px; margin: 0 auto; }
     </style>
 </head>
 <body>
 
-    <h2>AI Essay Generator</h2>
-
     <div class="container">
+        <h2>AI Essay Generator</h2>
+
         <input type="number" id="wordCount" placeholder="Number of words (max 3000)" min="50" max="3000"><br>
         <textarea id="topicInput" placeholder="Enter your essay topic..."></textarea><br>
 
-        <div class="checkbox-container">
-            <label>
-                <input type="checkbox" id="includeCitations">
-                Include Citations
-            </label>
-        </div>
+        <label>
+            <input type="checkbox" id="includeCitations">
+            Include Citations
+        </label><br>
 
         <select id="citationStyle">
             <option value="None">No specific format</option>
@@ -149,7 +56,7 @@
 
             document.getElementById("output").innerHTML = "Generating... Please wait.";
 
-            const response = await fetch("http://localhost:5000/generate", {
+            const response = await fetch("https://ai-essay-generator-pchq.onrender.com/generate", { // Update to HTTPS Render URL
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
