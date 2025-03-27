@@ -1,10 +1,20 @@
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
+const path = require("path");
+
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname)));  // Serve static files from the current directory
+
+// Default route to serve index.html
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 
 app.post("/generate", async (req, res) => {
     const { topic, wordCount, includeCitations, citationStyle } = req.body;
