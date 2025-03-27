@@ -6,6 +6,20 @@ const axios = require("axios");
 
 const app = express();
 
+// Middleware to set the Content Security Policy header
+app.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", 
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline'; " +  // Allows inline scripts
+        "style-src 'self' 'unsafe-inline'; " +  // Allows inline styles
+        "img-src 'self'; " +
+        "connect-src 'self'; " +  // Allow connections to your API
+        "font-src 'self';"
+    );
+    next();
+});
+
+
 // CORS configuration to allow requests from the frontend's URL
 const corsOptions = {
     origin: "https://ai-essay-generator-pchq.onrender.com", // Replace with your frontend's deployed URL
