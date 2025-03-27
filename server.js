@@ -2,12 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
+const path = require("path");
 
 const app = express();
 
 // CORS setup to allow requests from the frontend (replace with your actual frontend URL)
 const corsOptions = {
-  origin: "https://ai-essay-generator-pchq.onrender.com", // Replace with your frontend URL
+  origin: "https://your-frontend-url.onrender.com", // Replace with your frontend URL
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
@@ -15,6 +16,12 @@ const corsOptions = {
 app.use(cors(corsOptions)); // Apply CORS to all routes
 app.use(express.json());
 
+// Serve the index.html at the root URL
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+// Handle the generate POST request
 app.post("/generate", async (req, res) => {
     const { prompt } = req.body;
 
